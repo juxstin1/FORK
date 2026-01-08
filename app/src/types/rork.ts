@@ -13,6 +13,9 @@ export interface RorkProject {
   updated: string;
   requirementsPath?: string;
   featuresPath?: string;
+  personasPrimaryPath?: string;
+  personasSecondaryPath?: string;
+  personasJsonPath?: string;
 }
 
 export interface TierConfig {
