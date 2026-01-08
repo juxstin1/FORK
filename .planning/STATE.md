@@ -3,7 +3,7 @@
 ## Current
 
 - **Milestone:** 1 - MVP Pipeline
-- **Phase:** 20 - IDEA Stage
+- **Phase:** 30 - Persona Engine
 - **Status:** Complete
 
 ## Progress
@@ -12,7 +12,7 @@
 |-------|------|--------|---------|-----------|
 | 10 | Project Foundation | **complete** | 2025-01-08 | 2025-01-08 |
 | 20 | IDEA Stage | **complete** | 2025-01-08 | 2025-01-08 |
-| 30 | Persona Engine | pending | - | - |
+| 30 | Persona Engine | **complete** | 2025-01-08 | 2025-01-08 |
 | 40 | DESIGN Stage | pending | - | - |
 | 50 | BUILD Stage | pending | - | - |
 | 60 | Simulation Engine | pending | - | - |
@@ -20,6 +20,18 @@
 | 80 | DEBUG Stage | pending | - | - |
 | 90 | SHIP Stage | pending | - | - |
 | 100 | Integration & Polish | pending | - | - |
+
+## Phase 30 Deliverables
+
+- [x] Persona type definitions (`src/types/persona.ts`)
+- [x] App category classifier with 12 categories (`src/lib/persona/categories.ts`)
+- [x] Research query builder for demographics/behavior/tech/market (`src/lib/persona/research.ts`)
+- [x] Web research executor with data point extraction (`src/lib/persona/web-research.ts`)
+- [x] Persona generator (1 primary + 2 secondary) (`src/lib/persona/generator.ts`)
+- [x] File writers for markdown and JSON output (`src/lib/persona/writer.ts`)
+- [x] Default templates for all 12 categories (`src/lib/persona/defaults.ts`)
+- [x] Persona stage orchestrator (`src/stages/persona.ts`)
+- [x] Barrel exports and RorkProject type updates
 
 ## Phase 20 Deliverables
 
@@ -55,14 +67,14 @@ cd app && npx expo start --web --port 8081
 http://localhost:8081/preview.html
 ```
 
-## Next Steps (Phase 30: Persona Engine)
+## Next Steps (Phase 40: DESIGN Stage)
 
-Phase 30 will create web-researched, data-backed user personas:
+Phase 40 will convert requirements + personas into screens and flows:
 
-- Web search integration for demographic data
-- Persona generator (3-4 personas per app category)
-- `personas/primary.md`, `personas/secondary.md` output
-- Real stats, not assumptions (age, tech comfort, goals)
+- Screen generator based on requirements + budget tier
+- Flow mapper for user journeys
+- `design/screens.md`, `design/flows.md` output
+- Budget-aware component selection
 
 ## Blockers
 
@@ -76,6 +88,7 @@ None
 - Added custom icon with tintColor for dark background
 - Hot reload working via Expo web
 - **Phase 20 complete:** IDEA stage processing infrastructure built
+- **Phase 30 complete:** Persona engine with 12 category templates, research integration, and persona file generation
 
 ---
 
