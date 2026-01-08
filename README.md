@@ -1,9 +1,13 @@
+<p align="center">
+  <img src="app/assets/repo-banner.png" alt="FORK" width="100%">
+</p>
+
 # FORK
 
 > AI-powered app development assistant
 
 <p align="center">
-  <img src="app/assets/fork-image-2.png" alt="FORK Preview" width="600">
+  <img src="app/assets/FORK_preview_4k.png" alt="FORK Preview" width="700">
 </p>
 
 ## Overview
