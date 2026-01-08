@@ -3,7 +3,7 @@
 > AI-powered app development assistant
 
 <p align="center">
-  <img src="app/assets/fork_github_image.png" alt="FORK Preview" width="600">
+  <img src="app/assets/fork-image-2.png" alt="FORK Preview" width="600">
 </p>
 
 ## Overview
@@ -37,6 +37,6 @@ npx expo start
 
 Currently in active development. See `.planning/` for roadmap and phase details.
 
-## License
+---
 
-MIT
+Justin | MIT
