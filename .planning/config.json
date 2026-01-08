@@ -1,0 +1,20 @@
+{
+  "project": "rork",
+  "mode": "interactive",
+  "depth": "comprehensive",
+  "created": "2025-01-08",
+  "constraints": {
+    "platform": "windows",
+    "runtime": "claude-code",
+    "framework": "expo",
+    "budget_range": "$25-100/month"
+  },
+  "principles": {
+    "agent_scoped_reads": true,
+    "budget_first": true,
+    "pain_points_not_reworks": true,
+    "web_research_personas": true,
+    "local_execution": true,
+    "purposeful_docs_only": true
+  }
+}
