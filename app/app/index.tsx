@@ -106,7 +106,7 @@ export default function GlyphPet() {
   return (
     <View style={styles.container}>
       <StatusBar style="light" />
-
+      
       {/* Header */}
       <View style={styles.header}>
         <Text style={styles.headerText}>GLYPH (1)</Text>
@@ -130,7 +130,7 @@ export default function GlyphPet() {
         <View style={styles.statRow}>
           <Text style={styles.statLabel}>ENERGY</Text>
           <View style={[styles.barContainer]}>
-            <View style={[styles.barFill, { width: `${energy}%`, backgroundColor: COLORS.FG }]} />
+             <View style={[styles.barFill, { width: `${energy}%`, backgroundColor: COLORS.FG }]} />
           </View>
         </View>
       </View>
@@ -138,16 +138,16 @@ export default function GlyphPet() {
       {/* Controls */}
       <View style={styles.controls}>
         {petState === 'dead' ? (
-          <TouchableOpacity style={[styles.button, styles.primaryBtn]} onPress={revive}>
-            <Text style={styles.btnText}>RESET SYSTEM</Text>
-          </TouchableOpacity>
+           <TouchableOpacity style={[styles.button, styles.primaryBtn]} onPress={revive}>
+             <Text style={styles.btnText}>RESET SYSTEM</Text>
+           </TouchableOpacity>
         ) : (
           <>
             <TouchableOpacity style={styles.button} onPress={feed}>
               <Text style={styles.btnText}>FEED :: 01</Text>
             </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.button, petState === 'sleeping' && styles.activeBtn]}
+            <TouchableOpacity 
+              style={[styles.button, petState === 'sleeping' && styles.activeBtn]} 
               onPress={sleep}
             >
               <Text style={styles.btnText}>{petState === 'sleeping' ? 'WAKE :: 00' : 'SLEEP :: 02'}</Text>

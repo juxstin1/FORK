@@ -1,0 +1,36 @@
+{
+  "name": "SnapTask",
+  "tagline": "Tasks in a snap.",
+  "problem": "People forget things.",
+  "targetUser": {
+    "demographic": "General",
+    "goal": "Remember tasks",
+    "context": "On the go"
+  },
+  "features": [
+    {
+      "id": "f1",
+      "name": "Add Task",
+      "priority": "must-have",
+      "description": "Text input to add task",
+      "requires": [],
+      "excludes": []
+    },
+    {
+      "id": "f2",
+      "name": "List Tasks",
+      "priority": "must-have",
+      "description": "Show all tasks",
+      "requires": [],
+      "excludes": []
+    }
+  ],
+  "platforms": [
+    "ios",
+    "android"
+  ],
+  "offlineSupport": "required",
+  "tier": "scale",
+  "conflicts": [],
+  "generatedAt": "2026-02-07T06:11:31.517Z"
+}

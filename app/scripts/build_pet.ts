@@ -1,4 +1,10 @@
 
+import { runBuildStage } from "../src/stages/build";
+import * as path from "path";
+
+// --- The "Brain" (Simulating Claude's Creative Output) ---
+
+const PET_CODE = `
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
@@ -106,7 +112,7 @@ export default function GlyphPet() {
   return (
     <View style={styles.container}>
       <StatusBar style="light" />
-
+      
       {/* Header */}
       <View style={styles.header}>
         <Text style={styles.headerText}>GLYPH (1)</Text>
@@ -124,13 +130,13 @@ export default function GlyphPet() {
         <View style={styles.statRow}>
           <Text style={styles.statLabel}>HUNGER</Text>
           <View style={styles.barContainer}>
-            <View style={[styles.barFill, { width: `${hunger}%` }]} />
+            <View style={[styles.barFill, { width: \`\${hunger}%\` }]} />
           </View>
         </View>
         <View style={styles.statRow}>
           <Text style={styles.statLabel}>ENERGY</Text>
           <View style={[styles.barContainer]}>
-            <View style={[styles.barFill, { width: `${energy}%`, backgroundColor: COLORS.FG }]} />
+             <View style={[styles.barFill, { width: \`\${energy}%\`, backgroundColor: COLORS.FG }]} />
           </View>
         </View>
       </View>
@@ -138,16 +144,16 @@ export default function GlyphPet() {
       {/* Controls */}
       <View style={styles.controls}>
         {petState === 'dead' ? (
-          <TouchableOpacity style={[styles.button, styles.primaryBtn]} onPress={revive}>
-            <Text style={styles.btnText}>RESET SYSTEM</Text>
-          </TouchableOpacity>
+           <TouchableOpacity style={[styles.button, styles.primaryBtn]} onPress={revive}>
+             <Text style={styles.btnText}>RESET SYSTEM</Text>
+           </TouchableOpacity>
         ) : (
           <>
             <TouchableOpacity style={styles.button} onPress={feed}>
               <Text style={styles.btnText}>FEED :: 01</Text>
             </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.button, petState === 'sleeping' && styles.activeBtn]}
+            <TouchableOpacity 
+              style={[styles.button, petState === 'sleeping' && styles.activeBtn]} 
               onPress={sleep}
             >
               <Text style={styles.btnText}>{petState === 'sleeping' ? 'WAKE :: 00' : 'SLEEP :: 02'}</Text>
@@ -267,3 +273,36 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
+`;
+
+const FILES = [
+    {
+        path: "app/pet.tsx",
+        content: PET_CODE
+    },
+    // We also need to add navigation to it in the main index or a way to access it.
+    // For now, let's just overwrite the main index for instant gratification.
+    {
+        path: "app/index.tsx",
+        content: PET_CODE
+    }
+];
+
+// 2. Execution Function
+async function buildPet() {
+    console.log("🌑 Initializing 'Nothing' Design System...");
+    console.log("🐺 Generating Glyph Organism...");
+
+    const result = await runBuildStage({
+        projectDir: path.resolve(__dirname, ".."),
+        files: FILES,
+    });
+
+    if (result.errors.length > 0) {
+        console.error("❌ Build errors:", result.errors);
+    } else {
+        console.log(`✅ GLYPH PET INSTALLED at app/index.tsx`);
+    }
+}
+
+buildPet();

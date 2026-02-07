@@ -1,46 +1,55 @@
-<p align="center">
-  <img src="app/assets/repo-banner.png" alt="FORK" width="100%">
-</p>
+# FORK: The AI-Native App Framework 🍴
 
-# FORK
+**FORK is not just a template. It is a cyborg.**
 
-> AI-powered app development assistant
+It combines a production-ready **React Native/Expo** environment with a **Model Context Protocol (MCP)** server that gives AI agents (like Claude) direct control over the codebase.
 
-<p align="center">
-  <img src="app/assets/FORK_preview_4k.png" alt="FORK Preview" width="700">
-</p>
+## How It Works
 
-## Overview
+FORK allows you to build apps by *talking* to them.
 
-FORK is an AI-powered mobile application that helps users transform ideas into fully functional apps through an intuitive, guided development process.
+### 🧠 The Brain (Server)
+Located in `app/src/server/`.
+This is an MCP server that exposes tools to your AI:
+- `run_idea_stage`: Converts your raw ideas into structured requirements.
+- `run_design_stage`: Generates UI/UX specifications (JSON).
+- `run_build_stage`: Writes actual React Native code to your app.
 
-## Features
+### 🦾 The Body (App)
+Located in `app/`.
+This is a standard, high-performance Expo app pre-configured with:
+- **NativeWind (Tailwind)**: For styling.
+- **Expo Router**: For file-based navigation.
+- **Zustand**: For state management.
+- **Supabase**: For backend (configured, waiting for keys).
 
-- **Idea Stage** - Capture and refine your app concept
-- **Persona Engine** - Define your target users and their needs
-- **AI-Assisted Development** - Get intelligent suggestions throughout the process
-- **Live Preview** - See your app come to life in real-time
-
-## Tech Stack
-
-- React Native with Expo
-- TypeScript
-- Zustand for state management
+## The "Cool Game" (Glyph Pet)
+The "Nothing-style" Tamagotchi you see right now is just **one example** of what FORK can build.
+- The AI "Designed" it (via `scripts/build_pet.ts`).
+- The AI "Built" it (by writing to `app/App.tsx`).
 
 ## Getting Started
 
-```bash
-# Install dependencies
-npm install
+1.  **Install dependencies**:
+    ```bash
+    cd app
+    npm install
+    ```
 
-# Start the development server
-npx expo start
-```
+2.  **Connect Your AI**:
+    Configure Claude Desktop to use the FORK MCP server (see `walkthrough.md`).
 
-## Status
+3.  **Build Something**:
+    Tell Claude: *"I want to build a crypto wallet. Run the idea stage, then design it, then build it."*
 
-Currently in active development. See `.planning/` for roadmap and phase details.
+4.  **Run the App**:
+    ```bash
+    npm run web    # For Browser
+    npm run ios    # For iPhone
+    npm run android # For Android
+    ```
 
----
-
-Justin | MIT
+## Project Structure
+- `.rork/`: The AI's memory (Requirements, Design Specs).
+- `app/src/lib/prompts/`: The "Intelligence" (Prompt Engineering).
+- `app/src/stages/`: The Logic (Idea, Design, Build execution).

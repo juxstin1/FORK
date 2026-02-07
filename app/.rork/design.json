@@ -1,0 +1,39 @@
+{
+  "theme": {
+    "colors": {
+      "primary": "#FF5733",
+      "background": "#FFFFFF"
+    },
+    "typography": {
+      "header": "Inter-Bold",
+      "body": "Inter-Regular"
+    }
+  },
+  "navigation": {
+    "type": "stack",
+    "routes": [
+      "Home",
+      "AddTask"
+    ]
+  },
+  "screens": [
+    {
+      "id": "home",
+      "name": "Home Screen",
+      "purpose": "List tasks",
+      "components": [
+        "TaskList",
+        "FAB"
+      ]
+    }
+  ],
+  "components": [
+    {
+      "id": "c1",
+      "name": "TaskList",
+      "props": [
+        "items"
+      ]
+    }
+  ]
+}

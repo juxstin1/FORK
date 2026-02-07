@@ -8,10 +8,12 @@
     "preview": "node scripts/dev.js",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "mcp": "tsx src/server/index.ts"
   },
   "dependencies": {
     "@expo/metro-runtime": "~6.1.2",
+    "@modelcontextprotocol/sdk": "^1.26.0",
     "@supabase/supabase-js": "^2.90.1",
     "expo": "~54.0.31",
     "expo-status-bar": "~3.0.9",
@@ -21,6 +23,8 @@
     "react-native": "0.81.5",
     "react-native-web": "^0.21.0",
     "tailwindcss": "^3.4.19",
+    "tsx": "^4.21.0",
+    "zod": "^4.3.6",
     "zustand": "^5.0.9"
   },
   "devDependencies": {
