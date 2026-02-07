@@ -53,3 +53,14 @@ The "Nothing-style" Tamagotchi you see right now is just **one example** of what
 - `.rork/`: The AI's memory (Requirements, Design Specs).
 - `app/src/lib/prompts/`: The "Intelligence" (Prompt Engineering).
 - `app/src/stages/`: The Logic (Idea, Design, Build execution).
+
+## Safety Modes
+- SAFE mode (default): leave `FORK_DOCKER_POWER_MODE` unset. Only read-only Docker subcommands are allowed (`ps`, `images`, `info`, `version`, `inspect`). Commands time out after 60s.
+- POWER mode (explicit): set `FORK_DOCKER_POWER_MODE=I_UNDERSTAND` only when you intentionally need mutating Docker capabilities. Commands time out after 300s.
+
+## Hardening Smoke Test
+From `app/`, run:
+```bash
+npm run smoke:hardening
+```
+This verifies path traversal blocking, docker guardrails, and JSONL audit logging.

@@ -4,31 +4,37 @@
   "main": "index.ts",
   "scripts": {
     "start": "expo start",
-    "dev": "node scripts/dev.js",
-    "preview": "node scripts/dev.js",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "mcp": "tsx src/server/index.ts"
+    "mcp": "tsx src/server/index.ts",
+    "dev": "node scripts/dev.js",
+    "smoke:hardening": "tsx scripts/hardening-smoke.ts"
   },
   "dependencies": {
     "@expo/metro-runtime": "~6.1.2",
-    "@modelcontextprotocol/sdk": "^1.26.0",
-    "@supabase/supabase-js": "^2.90.1",
-    "expo": "~54.0.31",
+    "@react-native-async-storage/async-storage": "2.2.0",
+    "@react-navigation/native": "^7.1.28",
+    "@react-navigation/native-stack": "^7.12.0",
+    "@supabase/supabase-js": "^2.95.3",
+    "expo": "~54.0.33",
     "expo-status-bar": "~3.0.9",
     "nativewind": "^4.2.1",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-native": "0.81.5",
+    "react-native-reanimated": "~4.1.1",
+    "react-native-safe-area-context": "~5.6.0",
+    "react-native-screens": "~4.16.0",
     "react-native-web": "^0.21.0",
     "tailwindcss": "^3.4.19",
-    "tsx": "^4.21.0",
     "zod": "^4.3.6",
-    "zustand": "^5.0.9"
+    "zustand": "^5.0.11"
   },
   "devDependencies": {
+    "@modelcontextprotocol/sdk": "^1.26.0",
     "@types/react": "~19.1.0",
+    "tsx": "^4.21.0",
     "typescript": "~5.9.2"
   },
   "private": true
