@@ -1,10 +1,10 @@
-# RORK
+# FORK
 
-> AI assistant that ships mobile apps to the App Store. Not an IDE you fight with - a partner that handles IDEA → SHIP.
+> AI-native framework for building and shipping mobile apps. Not an IDE you fight with — a partner that handles IDEA → SHIP.
 
 ## Vision
 
-RORK is a Claude Code-native framework that takes an app idea and delivers a complete App Store submission package. It uses real demographic data for user simulation, respects budget constraints, and produces purposeful documentation where each agent only reads what it needs.
+FORK is a Claude Code-native framework that takes an app idea and delivers a complete App Store submission package. It uses real demographic data for user simulation, respects budget constraints, and produces purposeful documentation where each agent only reads what it needs.
 
 **Core principle:** You're GETTING SHIT DONE, not fighting tools.
 
@@ -18,7 +18,7 @@ Building and shipping a mobile app requires:
 - App Store asset generation (screenshots, descriptions, videos)
 - Submission process navigation
 
-Most tools help with ONE piece. RORK handles the entire pipeline, budget-aware, with AI-simulated user testing before you ship.
+Most tools help with ONE piece. FORK handles the entire pipeline, budget-aware, with AI-simulated user testing before you ship.
 
 ## Solution
 
@@ -42,7 +42,7 @@ Each stage has:
 
 ### Active
 
-- [ ] **Budget-first architecture** — User declares $25-100/month, RORK architects to fit
+- [ ] **Budget-first architecture** — User declares $25-100/month, FORK architects to fit
 - [ ] **Real demographic personas** — Web research at runtime (Ableton stats for VST, etc.)
 - [ ] **Pain point identification** — Simulations find friction, not suggest reworks
 - [ ] **Complete ship package** — .ipa/.aab, screenshots, store copy, privacy policy, submission guide
@@ -165,4 +165,4 @@ Output: Pain points, friction scores, drop-off predictions
 - **Budget:** User-declared, researched and fixed
 
 ---
-*Last updated: 2025-01-08 after initialization*
+*Last updated: 2026-02-07*

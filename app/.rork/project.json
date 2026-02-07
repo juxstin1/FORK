@@ -1,10 +1,16 @@
 {
-  "name": "",
-  "idea": "",
+  "name": "glyph-pet",
+  "idea": "Glyph Tamagotchi style game — a Nothing-aesthetic virtual pet you raise, feed, and play with through minimal monochrome interactions",
   "budget": 0,
   "tier": "free",
-  "stage": "INIT",
+  "stage": "BUILD",
   "platforms": ["ios", "android"],
-  "created": "",
-  "updated": ""
+  "createdAt": "2026-02-07T00:00:00.000Z",
+  "personasPrimaryPath": ".rork/personas/primary.md",
+  "personasSecondaryPath": ".rork/personas/secondary.md",
+  "personasJsonPath": ".rork/personas/personas.json",
+  "designPath": ".rork/design.json",
+  "designScreensPath": ".rork/design/screens.md",
+  "designFlowsPath": ".rork/design/flows.md",
+  "updated": "2026-02-07T00:00:00.000Z"
 }

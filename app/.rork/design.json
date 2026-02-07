@@ -1,39 +1,261 @@
 {
   "theme": {
     "colors": {
-      "primary": "#FF5733",
-      "background": "#FFFFFF"
+      "background": "#000000",
+      "surface": "#0A0A0A",
+      "surfaceElevated": "#141414",
+      "border": "#1A1A1A",
+      "borderActive": "#333333",
+      "textPrimary": "#FFFFFF",
+      "textSecondary": "#888888",
+      "textMuted": "#555555",
+      "accent": "#FFFFFF",
+      "accentDim": "#CCCCCC",
+      "statHunger": "#FFFFFF",
+      "statHappiness": "#FFFFFF",
+      "statEnergy": "#FFFFFF",
+      "statHygiene": "#FFFFFF",
+      "danger": "#FF3B30",
+      "warning": "#888888",
+      "success": "#FFFFFF"
     },
     "typography": {
-      "header": "Inter-Bold",
-      "body": "Inter-Regular"
+      "fontFamily": "System (SF Pro / Roboto — monospace for glyph rendering)",
+      "glyphFont": "monospace",
+      "displayLarge": "48px, weight 200, letter-spacing 4px",
+      "displayMedium": "32px, weight 300, letter-spacing 2px",
+      "headlineLarge": "24px, weight 400, letter-spacing 1px",
+      "headlineMedium": "20px, weight 400, letter-spacing 0.5px",
+      "bodyLarge": "16px, weight 400, letter-spacing 0.25px",
+      "bodyMedium": "14px, weight 400, letter-spacing 0.15px",
+      "labelSmall": "11px, weight 500, letter-spacing 1.5px, uppercase",
+      "glyphPet": "72px, monospace, weight 100"
+    },
+    "spacing": {
+      "unit": 8,
+      "screenPadding": 24,
+      "sectionGap": 32,
+      "componentGap": 16,
+      "inlineGap": 8
+    },
+    "animation": {
+      "petIdle": "subtle 2s breathing scale (1.0 → 1.02 → 1.0)",
+      "petHappy": "gentle 0.5s bounce",
+      "statChange": "300ms ease-out",
+      "screenTransition": "250ms fade",
+      "buttonPress": "100ms scale(0.95)"
     }
   },
   "navigation": {
     "type": "stack",
     "routes": [
       "Home",
-      "AddTask"
-    ]
+      "MiniGames",
+      "GlyphMatch",
+      "RhythmTap",
+      "MemoryGrid",
+      "Achievements",
+      "Graveyard",
+      "Settings"
+    ],
+    "structure": "Single-screen app with bottom action bar. Home is the primary (and only tab-like) view. Mini-games, achievements, and settings are stack-pushed overlays. No tab bar — the pet is always the focus."
   },
   "screens": [
     {
       "id": "home",
-      "name": "Home Screen",
-      "purpose": "List tasks",
+      "name": "Home",
+      "purpose": "Primary screen — pet display, stats, and interaction buttons. This is where 90% of time is spent.",
       "components": [
-        "TaskList",
-        "FAB"
-      ]
+        "StatusBar",
+        "PetGlyph",
+        "StatsRow",
+        "ActionBar",
+        "DayNightIndicator",
+        "LifeStageLabel"
+      ],
+      "layout": "Vertical stack: top status row (life stage + day/night) → center pet glyph (large, breathing animation) → stats row (4 horizontal bars) → bottom action bar (feed/play/clean/rest)"
+    },
+    {
+      "id": "mini-games",
+      "name": "MiniGames",
+      "purpose": "Game selection hub — choose from 3 mini-games that boost happiness",
+      "components": [
+        "GameCard",
+        "BackButton"
+      ],
+      "layout": "Vertical list of 3 game cards with glyph icon, name, and high score. Minimal — no images, just typography."
+    },
+    {
+      "id": "glyph-match",
+      "name": "GlyphMatch",
+      "purpose": "Memory matching game — flip glyph cards to find pairs",
+      "components": [
+        "GlyphCard",
+        "ScoreDisplay",
+        "Timer",
+        "BackButton"
+      ],
+      "layout": "4x4 grid of face-down glyph cards. Tap to reveal. Match pairs. Monochrome cards with border reveal animation."
+    },
+    {
+      "id": "rhythm-tap",
+      "name": "RhythmTap",
+      "purpose": "Rhythm game — tap glyphs as they scroll in from the right",
+      "components": [
+        "TapZone",
+        "GlyphStream",
+        "ScoreDisplay",
+        "ComboCounter",
+        "BackButton"
+      ],
+      "layout": "Full-screen with a tap zone on the left. Glyphs drift right-to-left. Tap when glyph enters the zone. Minimal — just dots and lines."
+    },
+    {
+      "id": "memory-grid",
+      "name": "MemoryGrid",
+      "purpose": "Pattern memory game — watch a sequence of glyphs light up, then repeat",
+      "components": [
+        "GridCell",
+        "SequenceDisplay",
+        "ScoreDisplay",
+        "BackButton"
+      ],
+      "layout": "3x3 grid. Cells flash in sequence. Player repeats. Each round adds one step. Clean grid with border-based highlights."
+    },
+    {
+      "id": "achievements",
+      "name": "Achievements",
+      "purpose": "Badge collection — view unlocked and locked achievements",
+      "components": [
+        "AchievementRow",
+        "ProgressIndicator",
+        "BackButton"
+      ],
+      "layout": "Scrollable list of achievements. Unlocked ones show glyph icon + title + date. Locked ones show muted placeholder + requirement text."
+    },
+    {
+      "id": "graveyard",
+      "name": "Graveyard",
+      "purpose": "Memorial for past pets — view history and stats of pets that have passed",
+      "components": [
+        "GravePetCard",
+        "EmptyState",
+        "BackButton"
+      ],
+      "layout": "Vertical list of past pet cards. Each shows pet glyph (final form), name, lifespan, and peak stats. Empty state: 'No memories yet.'"
+    },
+    {
+      "id": "settings",
+      "name": "Settings",
+      "purpose": "App settings — notifications, haptics, theme variant, about",
+      "components": [
+        "SettingsRow",
+        "ToggleSwitch",
+        "ThemePicker",
+        "BackButton"
+      ],
+      "layout": "Grouped settings list. Sections: Notifications, Haptics, Theme, About. Each row is label + control. Nothing-style minimal rows."
     }
   ],
   "components": [
     {
-      "id": "c1",
-      "name": "TaskList",
-      "props": [
-        "items"
-      ]
+      "id": "pet-glyph",
+      "name": "PetGlyph",
+      "props": ["stage", "mood", "isAnimating", "theme"],
+      "description": "Central pet display. Renders a monospace glyph character(s) that change based on life stage and mood. Uses Animated.View for breathing/bounce. Size: 72-96px."
+    },
+    {
+      "id": "stats-row",
+      "name": "StatsRow",
+      "props": ["hunger", "happiness", "energy", "hygiene"],
+      "description": "Horizontal row of 4 stat bars. Each is a label (uppercase, 11px) + thin horizontal progress bar (2px height, white fill on dark background). Shows value decay in real-time."
+    },
+    {
+      "id": "action-bar",
+      "name": "ActionBar",
+      "props": ["onFeed", "onPlay", "onClean", "onRest", "disabled"],
+      "description": "Bottom-fixed row of 4 action buttons. Each is a glyph icon + label. Tap triggers stat boost + pet animation + haptic. Cooldown state dims the button."
+    },
+    {
+      "id": "day-night-indicator",
+      "name": "DayNightIndicator",
+      "props": ["timeOfDay"],
+      "description": "Small indicator showing current time-of-day state (dawn/day/dusk/night). Single glyph character: ○ ● ◐ ◑. Affects background subtle tint."
+    },
+    {
+      "id": "life-stage-label",
+      "name": "LifeStageLabel",
+      "props": ["stage", "daysAlive"],
+      "description": "Top-left label showing current life stage name + days alive. Uppercase, muted text. e.g., 'EGG · DAY 1'"
+    },
+    {
+      "id": "status-bar",
+      "name": "StatusBar",
+      "props": ["petName", "lifeStage", "dayNight"],
+      "description": "Top status row spanning full width. Pet name left-aligned, life stage center, day/night right-aligned. All in label-small typography."
+    },
+    {
+      "id": "game-card",
+      "name": "GameCard",
+      "props": ["name", "icon", "highScore", "onPress"],
+      "description": "Pressable card for mini-game selection. Border-only card with glyph icon, game name, and best score. 1px border, no fill."
+    },
+    {
+      "id": "glyph-card",
+      "name": "GlyphCard",
+      "props": ["glyph", "isRevealed", "isMatched", "onFlip"],
+      "description": "Flippable card for GlyphMatch game. Shows back (border-only square) or front (glyph character). Matched cards stay revealed with dimmed border."
+    },
+    {
+      "id": "achievement-row",
+      "name": "AchievementRow",
+      "props": ["title", "description", "isUnlocked", "unlockedAt", "icon"],
+      "description": "Single achievement row. Unlocked: white text + glyph icon + date. Locked: muted text + '???' icon + requirement description."
+    },
+    {
+      "id": "toggle-switch",
+      "name": "ToggleSwitch",
+      "props": ["value", "onToggle", "label"],
+      "description": "Minimal toggle. Off: ○ (outline circle). On: ● (filled circle). Label to the left. No color — pure monochrome state."
+    },
+    {
+      "id": "settings-row",
+      "name": "SettingsRow",
+      "props": ["label", "value", "onPress", "type"],
+      "description": "Settings list item. Label left, value/control right. 1px bottom border. Pressable for navigation rows, inline control for toggles."
+    },
+    {
+      "id": "theme-picker",
+      "name": "ThemePicker",
+      "props": ["currentTheme", "unlockedThemes", "onSelect"],
+      "description": "Horizontal scroll of theme variant previews. Each shows a sample glyph in that theme's style. Locked themes show a lock glyph."
+    },
+    {
+      "id": "back-button",
+      "name": "BackButton",
+      "props": ["onPress"],
+      "description": "Top-left back arrow. Single glyph: ← . Pressable with haptic feedback."
+    },
+    {
+      "id": "empty-state",
+      "name": "EmptyState",
+      "props": ["message"],
+      "description": "Centered muted text for empty lists. e.g., 'No memories yet.' Single line, textMuted color."
     }
-  ]
+  ],
+  "designPrinciples": [
+    "Nothing aesthetic: pure black background, white typography, 1px borders, no color",
+    "Typography-first: glyphs and text are the primary visual elements, not illustrations",
+    "Breathing room: generous spacing, no visual clutter, every element earns its place",
+    "Instant comprehension: David (41) should understand every screen in 5 seconds",
+    "Ambient, not anxious: no guilt mechanics, no countdown timers visible to user, no punishment for absence",
+    "Haptic language: subtle vibrations replace visual feedback for interactions"
+  ],
+  "budgetConstraints": {
+    "tier": "free",
+    "uiComplexity": "minimal",
+    "allowedComponents": "Basic views, text, pressables, animated views, AsyncStorage",
+    "disallowed": "No charts, no maps, no camera, no cloud sync, no third-party UI libraries",
+    "animations": "React Native Animated API only (no Lottie, no Rive)"
+  }
 }

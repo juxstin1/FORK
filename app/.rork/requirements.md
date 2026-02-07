@@ -1,26 +1,72 @@
-# App Requirements: SnapTask
+# App Requirements: Glyph Pet
 
-> Tasks in a snap.
+> A Nothing-aesthetic virtual pet you raise, feed, and play with through minimal monochrome interactions
 
 ## Core Problem
 
-People forget things.
+Tamagotchi nostalgia meets modern minimal design — users want a low-pressure, ambient digital companion that lives on their phone. Existing virtual pet apps are cluttered, ad-heavy, and over-designed. Glyph Pet strips the genre to its essence: monochrome glyphs, simple gestures, quiet rituals.
 
 ## Target User
 
-- **Who:** General
-- **Goal:** Remember tasks
-- **Context:** On the go
+- **Who:** Design-conscious millennials and Gen-Z who appreciate Nothing Phone aesthetics, minimalism, and lo-fi digital experiences
+- **Goal:** Own a calming, low-maintenance virtual pet that rewards daily check-ins without pressure or guilt
+- **Context:** Quick sessions (30s–2min) during commute, breaks, or bedtime wind-down — ambient engagement, not hardcore gaming
 
 ## MVP Features
 
 ### Must Have
 
-**Add Task**
-- Text input to add task
+**Pet Lifecycle Engine**
+- Core state machine: egg → baby → teen → adult → elder with time-based evolution
+- Requires: local-storage
 
-**List Tasks**
-- Show all tasks
+**Glyph Renderer**
+- Monochrome glyph-art pet displayed as geometric/typographic characters that evolve with life stage
+- Requires: local-storage
+
+**Mood & Stats System**
+- Track hunger, happiness, energy, hygiene as 0-100 values with natural decay over real time
+- Requires: local-storage
+
+**Interaction Gestures**
+- Feed, play, clean, rest — tap-based interactions that affect pet stats
+- Requires: local-storage
+
+**Day/Night Cycle**
+- Pet behavior and visuals shift based on real-world time of day
+- Requires: local-storage
+
+**Persistent State**
+- Pet state persists across app closes using AsyncStorage; pet continues aging in background
+- Requires: local-storage
+
+### Should Have
+
+**Mini-Games**
+- 2-3 simple reaction/pattern games (glyph match, rhythm tap, memory grid) that boost happiness
+- Requires: local-storage
+
+**Achievement System**
+- Unlock badges for milestones: first evolution, 7-day streak, all stats maxed, etc.
+- Requires: local-storage
+
+**Haptic Feedback**
+- Subtle vibration patterns for feeding, petting, evolution events
+- Requires: local-storage
+
+### Nice to Have
+
+**Pet Graveyard**
+- Memorial screen for pets that have passed; view their stats and history
+- Requires: local-storage
+
+**Notification Nudges**
+- Gentle local notifications when pet is hungry or lonely (no server push needed)
+- Requires: local-storage
+
+**Theme Variants**
+- Unlock alternate glyph styles (dot-matrix, ASCII, braille, circuit) as pet evolves
+- Requires: local-storage
 
 ## Platform Requirements
 
@@ -30,8 +76,8 @@ People forget things.
 
 ## Budget Constraints
 
-- **Tier:** scale
-- **Details:** $100/mo - PlanetScale, Clerk Pro, R2+Edge, Full EAS
+- **Tier:** free
+- **Details:** $0/mo - Supabase free, R2 free, EAS free builds
 
 ## Success Criteria
 

@@ -20,6 +20,8 @@ import { getDefaultTemplate, mergeWithDefaults } from "../lib/persona/defaults";
 export interface PersonaStageInput {
   projectDir: string;
   researchExecutor?: ResearchExecutor;
+  secondaryCount?: 0 | 1 | 2;
+  includeEdgeCase?: boolean;
 }
 
 export interface PersonaStageOutput {
@@ -35,7 +37,7 @@ export interface PersonaStageOutput {
 export async function runPersonaStage(
   input: PersonaStageInput
 ): Promise<PersonaStageOutput> {
-  const { projectDir, researchExecutor } = input;
+  const { projectDir, researchExecutor, secondaryCount, includeEdgeCase } = input;
 
   // 1. Read requirements from IDEA stage
   const requirements = await readRequirements(projectDir);
@@ -94,6 +96,8 @@ export async function runPersonaStage(
     },
     research,
     budget: requirements.tier,
+    secondaryCount,
+    includeEdgeCase,
   });
 
   // 6. Merge with defaults if research was sparse

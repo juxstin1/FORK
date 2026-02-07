@@ -1,36 +1,113 @@
 {
-  "name": "SnapTask",
-  "tagline": "Tasks in a snap.",
-  "problem": "People forget things.",
+  "name": "Glyph Pet",
+  "tagline": "A Nothing-aesthetic virtual pet you raise, feed, and play with through minimal monochrome interactions",
+  "problem": "Tamagotchi nostalgia meets modern minimal design — users want a low-pressure, ambient digital companion that lives on their phone. Existing virtual pet apps are cluttered, ad-heavy, and over-designed. Glyph Pet strips the genre to its essence: monochrome glyphs, simple gestures, quiet rituals.",
   "targetUser": {
-    "demographic": "General",
-    "goal": "Remember tasks",
-    "context": "On the go"
+    "demographic": "Design-conscious millennials and Gen-Z who appreciate Nothing Phone aesthetics, minimalism, and lo-fi digital experiences",
+    "goal": "Own a calming, low-maintenance virtual pet that rewards daily check-ins without pressure or guilt",
+    "context": "Quick sessions (30s–2min) during commute, breaks, or bedtime wind-down — ambient engagement, not hardcore gaming"
   },
   "features": [
     {
-      "id": "f1",
-      "name": "Add Task",
+      "id": "pet-lifecycle",
+      "name": "Pet Lifecycle Engine",
       "priority": "must-have",
-      "description": "Text input to add task",
-      "requires": [],
+      "description": "Core state machine: egg → baby → teen → adult → elder with time-based evolution",
+      "requires": ["local-storage"],
       "excludes": []
     },
     {
-      "id": "f2",
-      "name": "List Tasks",
+      "id": "glyph-renderer",
+      "name": "Glyph Renderer",
       "priority": "must-have",
-      "description": "Show all tasks",
-      "requires": [],
+      "description": "Monochrome glyph-art pet displayed as geometric/typographic characters that evolve with life stage",
+      "requires": ["local-storage"],
+      "excludes": []
+    },
+    {
+      "id": "mood-stats",
+      "name": "Mood & Stats System",
+      "priority": "must-have",
+      "description": "Track hunger, happiness, energy, hygiene as 0-100 values with natural decay over real time",
+      "requires": ["local-storage"],
+      "excludes": []
+    },
+    {
+      "id": "interactions",
+      "name": "Interaction Gestures",
+      "priority": "must-have",
+      "description": "Feed, play, clean, rest — tap-based interactions that affect pet stats",
+      "requires": ["local-storage"],
+      "excludes": []
+    },
+    {
+      "id": "day-night-cycle",
+      "name": "Day/Night Cycle",
+      "priority": "must-have",
+      "description": "Pet behavior and visuals shift based on real-world time of day",
+      "requires": ["local-storage"],
+      "excludes": []
+    },
+    {
+      "id": "persistent-state",
+      "name": "Persistent State",
+      "priority": "must-have",
+      "description": "Pet state persists across app closes using AsyncStorage; pet continues aging in background",
+      "requires": ["local-storage"],
+      "excludes": []
+    },
+    {
+      "id": "mini-games",
+      "name": "Mini-Games",
+      "priority": "should-have",
+      "description": "2-3 simple reaction/pattern games (glyph match, rhythm tap, memory grid) that boost happiness",
+      "requires": ["local-storage"],
+      "excludes": []
+    },
+    {
+      "id": "achievements",
+      "name": "Achievement System",
+      "priority": "should-have",
+      "description": "Unlock badges for milestones: first evolution, 7-day streak, all stats maxed, etc.",
+      "requires": ["local-storage"],
+      "excludes": []
+    },
+    {
+      "id": "haptics",
+      "name": "Haptic Feedback",
+      "priority": "should-have",
+      "description": "Subtle vibration patterns for feeding, petting, evolution events",
+      "requires": ["local-storage"],
+      "excludes": []
+    },
+    {
+      "id": "pet-graveyard",
+      "name": "Pet Graveyard",
+      "priority": "nice-to-have",
+      "description": "Memorial screen for pets that have passed; view their stats and history",
+      "requires": ["local-storage"],
+      "excludes": []
+    },
+    {
+      "id": "notification-nudges",
+      "name": "Notification Nudges",
+      "priority": "nice-to-have",
+      "description": "Gentle local notifications when pet is hungry or lonely (no server push needed)",
+      "requires": ["local-storage"],
+      "excludes": []
+    },
+    {
+      "id": "theme-variants",
+      "name": "Theme Variants",
+      "priority": "nice-to-have",
+      "description": "Unlock alternate glyph styles (dot-matrix, ASCII, braille, circuit) as pet evolves",
+      "requires": ["local-storage"],
       "excludes": []
     }
   ],
-  "platforms": [
-    "ios",
-    "android"
-  ],
+  "platforms": ["ios", "android"],
   "offlineSupport": "required",
-  "tier": "scale",
+  "tier": "free",
   "conflicts": [],
-  "generatedAt": "2026-02-07T06:11:31.517Z"
+  "generatedAt": "2026-02-07T00:00:00.000Z"
 }

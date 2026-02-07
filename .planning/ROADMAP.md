@@ -1,4 +1,4 @@
-# RORK Roadmap
+# FORK Roadmap
 
 ## Milestone 1: MVP Pipeline
 
@@ -6,7 +6,7 @@
 
 **Success Criteria:**
 - User can input an app idea and budget
-- RORK produces a working Expo app
+- FORK produces a working Expo app
 - App passes simulation testing
 - Ship package generated (screenshots, store copy, submission guide)
 
@@ -178,4 +178,5 @@
 ---
 
 *Created: 2025-01-08*
+*Updated: 2026-02-07*
 *Milestone: MVP Pipeline*
