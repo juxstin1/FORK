@@ -1,6 +1,6 @@
 export type BudgetTier = "free" | "starter" | "pro" | "scale";
 
-export type Stage = "INIT" | "IDEA" | "DESIGN" | "BUILD" | "TEST" | "DEBUG" | "SHIP";
+export type Stage = "INIT" | "IDEA" | "PERSONA" | "DESIGN" | "BUILD" | "TEST" | "DEBUG" | "SHIP";
 
 export interface RorkProject {
   name: string;
@@ -16,6 +16,8 @@ export interface RorkProject {
   personasPrimaryPath?: string;
   personasSecondaryPath?: string;
   personasJsonPath?: string;
+  designPath?: string;
+  buildManifest?: { files: string[]; generatedAt: string };
 }
 
 export interface TierConfig {
