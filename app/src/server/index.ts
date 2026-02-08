@@ -34,6 +34,9 @@ import { runBuildStage } from "../stages/build.js";
 import type { BuildFile } from "../stages/build.js";
 import { runReadStage } from "../stages/read.js";
 import { runDockerStage } from "../stages/docker.js";
+import { runDesignGenerate } from "../stages/design-generator.js";
+import { runBuildGenerate } from "../stages/build-generator.js";
+import { capturePreview, closeBrowser } from "./preview.js";
 import { appendAuditLog } from "../lib/audit.js";
 import { isWithinRoot, resolveWithinRoot } from "../lib/path-security.js";
 
@@ -97,6 +100,7 @@ class ForkServer {
         // Error handling
         this.server.onerror = (error) => console.error("[MCP Error]", error);
         process.on("SIGINT", async () => {
+            await closeBrowser();
             await this.server.close();
             process.exit(0);
         });
@@ -361,7 +365,59 @@ class ForkServer {
                         },
                         required: ["model"]
                     }
-                }
+                },
+                {
+                    name: "capture_preview",
+                    description: "Capture a screenshot of the running app preview. Returns a base64 PNG image. Requires Puppeteer and dev server running (npm run dev). Screenshots the iPhone-framed preview at localhost:3333 by default.",
+                    inputSchema: {
+                        type: "object",
+                        additionalProperties: false,
+                        properties: {
+                            url: { type: "string", description: "URL to capture (default http://localhost:3333 — the iPhone-framed preview)" },
+                            waitMs: { type: "number", description: "Milliseconds to wait for React render (default 2000, max 15000)" }
+                        },
+                    }
+                },
+                {
+                    name: "run_design_generate",
+                    description: "Generate a complete DesignSpec from upstream artifacts (.rork/features.json + personas). Reads IDEA/PERSONA output, calls OpenRouter with design.generate.v2 prompt, parses JSON, saves to .rork/design.json.",
+                    inputSchema: {
+                        type: "object",
+                        additionalProperties: false,
+                        properties: {
+                            model: {
+                                type: "string",
+                                enum: [...ALLOWED_MODELS],
+                                description: "OpenRouter model to use (default qwen/qwen3-coder-next)"
+                            },
+                        },
+                    }
+                },
+                {
+                    name: "run_build_generate",
+                    description: "Generate code files from .rork/design.json. For each screen/component, renders build.screen.v2 or build.component.v2 prompt, calls OpenRouter, writes .tsx files. Runs build validator after writing.",
+                    inputSchema: {
+                        type: "object",
+                        additionalProperties: false,
+                        properties: {
+                            model: {
+                                type: "string",
+                                enum: [...ALLOWED_MODELS],
+                                description: "OpenRouter model to use (default qwen/qwen3-coder-next)"
+                            },
+                            screenIds: {
+                                type: "array",
+                                items: { type: "string" },
+                                description: "Optional: generate only these screen IDs (default: all)"
+                            },
+                            componentIds: {
+                                type: "array",
+                                items: { type: "string" },
+                                description: "Optional: generate only these component IDs (default: all)"
+                            },
+                        },
+                    }
+                },
             ],
         }));
 
@@ -783,6 +839,95 @@ class ForkServer {
                         const errorMessage = error instanceof Error ? error.message : String(error);
                         return {
                             content: [{ type: "text", text: `OpenRouter error: ${errorMessage}` }],
+                            isError: true,
+                        };
+                    }
+                }
+
+                case "capture_preview": {
+                    const args = baseArgs;
+                    try {
+                        const result = await capturePreview({
+                            url: args.url ? String(args.url) : undefined,
+                            waitMs: typeof args.waitMs === "number" ? args.waitMs : undefined,
+                        });
+                        return {
+                            content: [{
+                                type: "image",
+                                data: result.base64,
+                                mimeType: result.mimeType,
+                            }],
+                        };
+                    } catch (error) {
+                        const errorMessage = error instanceof Error ? error.message : String(error);
+                        return {
+                            content: [{ type: "text", text: `Preview capture failed: ${errorMessage}` }],
+                            isError: true,
+                        };
+                    }
+                }
+
+                case "run_design_generate": {
+                    const args = baseArgs;
+                    try {
+                        const result = await runDesignGenerate({
+                            projectDir: PROJECT_DIR,
+                            model: args.model ? String(args.model) : undefined,
+                        });
+
+                        if (!result.success) {
+                            return {
+                                content: [{ type: "text", text: `Design generation failed: ${result.error}` }],
+                                isError: true,
+                            };
+                        }
+
+                        return guardedToolResponse({
+                            success: true,
+                            path: result.path,
+                            screens: result.design?.screens.length ?? 0,
+                            components: result.design?.components.length ?? 0,
+                            navigation: result.design?.navigation.type,
+                            usage: result.usage,
+                        }, "run_design_generate");
+                    } catch (error) {
+                        const errorMessage = error instanceof Error ? error.message : String(error);
+                        return {
+                            content: [{ type: "text", text: `Design generation error: ${errorMessage}` }],
+                            isError: true,
+                        };
+                    }
+                }
+
+                case "run_build_generate": {
+                    const args = baseArgs;
+                    try {
+                        const screenIds = Array.isArray(args.screenIds)
+                            ? args.screenIds.map(String)
+                            : undefined;
+                        const componentIds = Array.isArray(args.componentIds)
+                            ? args.componentIds.map(String)
+                            : undefined;
+
+                        const result = await runBuildGenerate({
+                            projectDir: PROJECT_DIR,
+                            model: args.model ? String(args.model) : undefined,
+                            screenIds,
+                            componentIds,
+                        });
+
+                        return guardedToolResponse({
+                            success: result.success,
+                            filesGenerated: result.files.length,
+                            written: result.written,
+                            errors: result.errors,
+                            validation: result.validation,
+                            usage: result.usage,
+                        }, "run_build_generate");
+                    } catch (error) {
+                        const errorMessage = error instanceof Error ? error.message : String(error);
+                        return {
+                            content: [{ type: "text", text: `Build generation error: ${errorMessage}` }],
                             isError: true,
                         };
                     }

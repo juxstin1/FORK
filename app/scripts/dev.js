@@ -1,71 +1,81 @@
-const { spawn, exec } = require("child_process");
+const { spawn } = require("child_process");
 const path = require("path");
-const fs = require("fs");
 
-const PREVIEW_PORT = 3000;
 const EXPO_PORT = 8081;
+const PREVIEW_PORT = 3333;
 
-// Colors for console output
 const colors = {
   green: (t) => `\x1b[32m${t}\x1b[0m`,
   blue: (t) => `\x1b[34m${t}\x1b[0m`,
   yellow: (t) => `\x1b[33m${t}\x1b[0m`,
   cyan: (t) => `\x1b[36m${t}\x1b[0m`,
+  dim: (t) => `\x1b[2m${t}\x1b[0m`,
 };
 
-console.log(colors.cyan("\n🚀 RORK Dev Server Starting...\n"));
+console.log(colors.cyan("\nFORK Dev Server Starting...\n"));
 
-// Start Expo web server in background
+const children = [];
+
+// Spawn Expo
 const expo = spawn("npx", ["expo", "start", "--web", "--port", EXPO_PORT.toString()], {
   stdio: ["ignore", "pipe", "pipe"],
   shell: true,
   detached: false,
 });
+children.push(expo);
 
 expo.stdout.on("data", (data) => {
   const output = data.toString();
-  if (output.includes("Web is waiting")) {
-    console.log(colors.green("✓ Expo web server ready"));
-    openPreview();
+  process.stdout.write(output);
+
+  if (output.includes("Web is waiting") || output.includes("Waiting on")) {
+    console.log(colors.green(`\nExpo ready: http://localhost:${EXPO_PORT}`));
+
+    // Launch preview server after Expo is ready
+    const preview = spawn("node", [path.join(__dirname, "preview-server.js")], {
+      stdio: ["ignore", "pipe", "pipe"],
+      shell: true,
+      detached: false,
+    });
+    children.push(preview);
+
+    preview.stdout.on("data", (d) => {
+      const msg = d.toString().trim();
+      if (msg) console.log(colors.dim(`[preview] ${msg}`));
+    });
+
+    preview.stderr.on("data", (d) => {
+      const msg = d.toString().trim();
+      if (msg) console.error(colors.dim(`[preview] ${msg}`));
+    });
+
+    preview.on("exit", (code) => {
+      if (code !== 0 && code !== null) {
+        console.error(colors.yellow(`Preview server exited with code ${code}`));
+      }
+    });
+
+    console.log(colors.green(`Preview: http://localhost:${PREVIEW_PORT}`));
+    console.log(colors.green("Hot reload active — changes appear instantly\n"));
+    console.log(colors.dim(`  Expo:    http://localhost:${EXPO_PORT}`));
+    console.log(colors.dim(`  Preview: http://localhost:${PREVIEW_PORT}\n`));
   }
 });
 
 expo.stderr.on("data", (data) => {
-  // Filter out noise
   const output = data.toString();
-  if (!output.includes("WARN") && output.trim()) {
-    console.log(output);
-  }
+  if (output.trim()) process.stderr.write(output);
 });
 
-function openPreview() {
-  const previewPath = path.join(__dirname, "..", "web", "preview.html");
-  const previewUrl = `file:///${previewPath.replace(/\\/g, "/")}`;
-
-  console.log(colors.blue(`\n📱 Opening iPhone preview...`));
-  console.log(colors.yellow(`   Preview: ${previewUrl}`));
-  console.log(colors.yellow(`   App: http://localhost:${EXPO_PORT}`));
-  console.log(colors.green(`\n✓ Hot reload active - changes appear instantly\n`));
-
-  // Open in default browser (Windows)
-  exec(`start "" "${previewUrl}"`, (err) => {
-    if (err) {
-      console.log(colors.yellow(`Open manually: ${previewUrl}`));
-    }
-  });
+function shutdown() {
+  console.log(colors.yellow("\n\nShutting down..."));
+  for (const child of children) {
+    try { child.kill(); } catch {}
+  }
+  process.exit(0);
 }
 
-// Handle cleanup
-process.on("SIGINT", () => {
-  console.log(colors.yellow("\n\nShutting down..."));
-  expo.kill();
-  process.exit(0);
-});
+process.on("SIGINT", shutdown);
+process.on("SIGTERM", shutdown);
 
-process.on("SIGTERM", () => {
-  expo.kill();
-  process.exit(0);
-});
-
-// Keep alive
 console.log(colors.blue("Starting Expo server..."));
