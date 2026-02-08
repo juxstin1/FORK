@@ -16,8 +16,6 @@ export * from "./render";
 
 // Stage prompts
 export * from "./stages/idea";
-// Stage prompts
-export * from "./stages/idea";
 export * from "./stages/persona";
 export * from "./stages/design";
 export * from "./stages/build";
@@ -118,6 +116,174 @@ export const REGISTRY: PromptRegistry = {
         user: "Write the React Native code for this reusable component:\n\n## Component Specification\n{{componentSpec}}\n\n## Design System\n{{theme}}\n\n## Output\nReturn ONLY the code for the component file.",
         tags: ["code", "react-native", "component"],
         maxOutputTokens: 2000,
+    },
+
+    // DESIGN Stage v2
+    "design.generate.v2": {
+        id: "design.generate.v2",
+        stage: "DESIGN",
+        version: "2.0.0",
+        system: "You are FORK's Lead UI/UX Designer. You create mobile-first designs for Expo/React Native apps. You understand budget constraints, persona-driven UX, and React Navigation patterns. Output valid JSON only — no markdown fences, no commentary.",
+        user: `Design a complete UI specification for this app.
+
+## App Requirements
+{{requirements}}
+
+## Features
+{{features}}
+
+## Personas
+{{personas}}
+
+## Budget Tier
+{{tier}}
+
+Budget tier determines UI complexity:
+- free: Basic views, text inputs, buttons only. No charts, maps, camera, or animations beyond React Native Animated API.
+- starter: Cards, lists, modals, bottom sheets. Standard component library.
+- pro: Animations, gestures, charts, maps. Rich interactions.
+- scale: Custom components, advanced interactions, premium feel.
+
+## Task
+Produce a JSON object with this exact shape:
+
+{
+  "theme": {
+    "colors": { "background": "#hex", "surface": "#hex", "text": "#hex", "textSecondary": "#hex", "accent": "#hex", "border": "#hex" },
+    "typography": { "heading": "font-spec", "body": "font-spec", "caption": "font-spec" }
+  },
+  "navigation": {
+    "type": "tab" | "stack" | "drawer",
+    "rationale": "Why this navigation pattern fits the persona's tech comfort and app complexity",
+    "routes": ["RouteName1", "RouteName2"]
+  },
+  "screens": [
+    {
+      "id": "screen-id",
+      "name": "ScreenName",
+      "purpose": "What this screen does for the user",
+      "route": "/route-path",
+      "components": ["ComponentName1", "ComponentName2"],
+      "featureIds": ["feature-id-1"]
+    }
+  ],
+  "components": [
+    {
+      "id": "component-id",
+      "name": "ComponentName",
+      "props": ["propName: type"],
+      "description": "What this component renders"
+    }
+  ]
+}
+
+Rules:
+- Every must-have feature must map to at least one screen
+- Persona tech comfort (1-5) drives complexity: low comfort = simpler flows, fewer screens
+- Component count must respect budget tier constraints
+- Navigation type should match app complexity (≤4 screens = stack, 4-6 = tabs, 6+ = drawer/tabs)`,
+        tags: ["design", "ui", "architecture", "persona-driven", "budget-aware"],
+        maxOutputTokens: 4000,
+    },
+
+    // BUILD Stage v2
+    "build.screen.v2": {
+        id: "build.screen.v2",
+        stage: "BUILD",
+        version: "2.0.0",
+        system: `You are FORK's Senior React Native Developer. You write production-ready Expo 54 / React Native 0.81 code.
+
+Tech stack:
+- TypeScript strict mode (no \`any\`, no \`as any\`)
+- NativeWind 4.2 for styling (className prop, NOT StyleSheet)
+- Zustand 5 for state management
+- React Navigation 7 for navigation (typed props)
+- SafeAreaView from react-native-safe-area-context on every screen
+- Expo SDK 54 APIs
+
+Code conventions:
+- Default export the screen component
+- Typed props interface: \`type Props = NativeStackScreenProps<RootStackParamList, 'ScreenName'>\`
+- Import order: react, react-native, expo, third-party, local
+- Use \`className\` for all styling (NativeWind), never \`style={}\` or StyleSheet
+- Zustand store access: \`const items = useAppStore(s => s.items)\`
+- Functional components with hooks only
+
+What NOT to do:
+- No inline styles or StyleSheet.create
+- No \`any\` type annotations
+- No console.log (use __DEV__ check if needed)
+- No hardcoded colors (use theme/NativeWind classes)
+- No default React Native imports like \`import React from 'react'\` (React 19 doesn't need it)`,
+        user: `Write the React Native screen component for:
+
+## Screen
+{{screenSpec}}
+
+## Design Theme
+{{theme}}
+
+## App Name
+{{appName}}
+
+## Navigation Structure
+{{navigation}}
+
+## Available Components
+These components exist or will be created — import and use them:
+{{components}}
+
+## Output
+Return ONLY the TypeScript code for the screen file. No markdown fences, no explanation.
+The file should have:
+1. Typed imports
+2. Props type (if using navigation params)
+3. The screen component with NativeWind classes
+4. A default export`,
+        tags: ["code", "react-native", "screen", "nativewind", "typed"],
+        maxOutputTokens: 4000,
+    },
+    "build.component.v2": {
+        id: "build.component.v2",
+        stage: "BUILD",
+        version: "2.0.0",
+        system: `You are FORK's Senior React Native Developer. You write production-ready Expo 54 / React Native 0.81 code.
+
+Tech stack:
+- TypeScript strict mode (no \`any\`, no \`as any\`)
+- NativeWind 4.2 for styling (className prop, NOT StyleSheet)
+- Zustand 5 for state management
+- Functional components with hooks
+
+Code conventions:
+- Named export for components (not default export)
+- Define a Props interface above the component
+- Import order: react, react-native, expo, third-party, local
+- Use \`className\` for all styling (NativeWind), never \`style={}\` or StyleSheet
+- Components should be pure — no side effects in render
+
+What NOT to do:
+- No inline styles or StyleSheet.create
+- No \`any\` type annotations
+- No console.log
+- No hardcoded color values (use NativeWind theme classes)
+- No default React import (React 19)`,
+        user: `Write the React Native component for:
+
+## Component
+{{componentSpec}}
+
+## Design Theme
+{{theme}}
+
+## Output
+Return ONLY the TypeScript code. No markdown fences, no explanation.
+The file should have:
+1. Props interface
+2. Named export component using NativeWind classes
+3. All props properly typed`,
+        tags: ["code", "react-native", "component", "nativewind", "typed"],
+        maxOutputTokens: 3000,
     },
 };
 
