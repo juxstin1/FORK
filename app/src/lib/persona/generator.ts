@@ -12,6 +12,8 @@ export interface PersonaGeneratorInput {
   };
   research: ResearchResult[];
   budget: BudgetTier;
+  secondaryCount?: 0 | 1 | 2;
+  includeEdgeCase?: boolean;
 }
 
 const FIRST_NAMES = {
@@ -42,6 +44,8 @@ const PERSONA_ARCHETYPES = {
 
 export function generatePersonas(input: PersonaGeneratorInput): PersonaSet {
   const { category, targetUser, research, budget } = input;
+  const secondaryCount = input.secondaryCount ?? 0;
+  const includeEdgeCase = input.includeEdgeCase ?? false;
 
   // Extract insights from research
   const insights = extractInsights(research);
@@ -54,28 +58,49 @@ export function generatePersonas(input: PersonaGeneratorInput): PersonaSet {
     budget
   );
 
-  // Generate secondary personas
-  const secondary1 = generateSecondaryPersona(
-    category,
-    targetUser,
-    insights,
-    budget,
-    "adjacent-younger"
-  );
+  const secondary: Persona[] = [];
 
-  const secondary2 = generateSecondaryPersona(
-    category,
-    targetUser,
-    insights,
-    budget,
-    "edge-case"
-  );
+  if (secondaryCount >= 1) {
+    secondary.push(
+      generateSecondaryPersona(
+        category,
+        targetUser,
+        insights,
+        budget,
+        "adjacent-younger"
+      )
+    );
+  }
+
+  if (secondaryCount >= 2) {
+    secondary.push(
+      generateSecondaryPersona(
+        category,
+        targetUser,
+        insights,
+        budget,
+        "broad-secondary"
+      )
+    );
+  }
+
+  if (includeEdgeCase) {
+    secondary.push(
+      generateSecondaryPersona(
+        category,
+        targetUser,
+        insights,
+        budget,
+        "edge-case"
+      )
+    );
+  }
 
   return {
     appCategory: category,
     generatedAt: new Date().toISOString(),
     primary,
-    secondary: [secondary1, secondary2],
+    secondary,
     researchSources: collectSources(research),
   };
 }
@@ -176,9 +201,10 @@ function generateSecondaryPersona(
   targetUser: { demographic: string; goal: string; context: string },
   insights: ResearchInsights,
   budget: BudgetTier,
-  variant: "adjacent-younger" | "edge-case"
+  variant: "adjacent-younger" | "broad-secondary" | "edge-case"
 ): Persona {
   const isYounger = variant === "adjacent-younger";
+  const isEdgeCase = variant === "edge-case";
   const archetype = isYounger
     ? PERSONA_ARCHETYPES.secondary1
     : PERSONA_ARCHETYPES.secondary2;
@@ -189,11 +215,13 @@ function generateSecondaryPersona(
   const ageRange = adjustAgeRange(insights.primaryAgeRange, archetype.ageOffset);
 
   return {
-    id: isYounger ? "secondary-1" : "secondary-2",
+    id: isYounger ? "secondary-1" : isEdgeCase ? "edge-case-1" : "secondary-2",
     name,
-    type: "secondary",
+    type: isEdgeCase ? "edge-case" : "secondary",
     oneLiner: isYounger
       ? `Younger user exploring ${category} apps`
+      : isEdgeCase
+      ? `Edge-case user with specialized needs`
       : `Occasional user with different needs`,
     demographics: {
       ageRange,
@@ -215,6 +243,8 @@ function generateSecondaryPersona(
       sessionDuration: isYounger ? "15-30 minutes" : "2-5 minutes",
       primaryMotivation: isYounger
         ? "Explore and discover"
+        : isEdgeCase
+        ? "Get specific task done with minimal complexity"
         : "Get specific task done",
       frustrations: generateFrustrations(category, variant),
       alternatives: generateAlternatives(category),
