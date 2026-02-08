@@ -1,3 +1,4 @@
+import * as path from "path";
 import { readDesign, readProjectConfig } from "../lib/artifacts.js";
 import { getRenderedPrompt } from "../lib/prompts/index.js";
 import { runOpenRouter } from "../server/openrouter.js";
@@ -19,11 +20,17 @@ export interface BuildGenerateResult {
     errors: string[];
     validation: { file: string; issues: string[] }[];
     usage: { prompt_tokens: number; completion_tokens: number; total_tokens: number };
+    readFrom: {
+        projectDir: string;
+        designPath: string;
+        projectConfigPath: string;
+        designFound: boolean;
+    };
 }
 
 function extractCode(text: string): string {
     let code = text.trim();
-    // Strip markdown fences
+    // Strip markdown fences (tsx, ts, typescript, javascript)
     if (code.startsWith("```")) {
         code = code.replace(/^```(?:tsx?|typescript|javascript)?\n?/, "").replace(/\n?```$/, "");
     }
@@ -33,15 +40,26 @@ function extractCode(text: string): string {
 export async function runBuildGenerate(input: BuildGenerateInput): Promise<BuildGenerateResult> {
     const { projectDir, model = "qwen/qwen3-coder-next" } = input;
 
+    const rorkDir = path.join(projectDir, ".rork");
+    const readFrom = {
+        projectDir,
+        designPath: path.join(rorkDir, "design.json"),
+        projectConfigPath: path.join(rorkDir, "project.json"),
+        designFound: false,
+    };
+
     const design = readDesign(projectDir);
+    readFrom.designFound = design !== null;
+
     if (!design) {
         return {
             success: false,
             files: [],
             written: [],
-            errors: ["No design.json found. Run DESIGN stage first."],
+            errors: ["Missing design. Expected .rork/design.json (run /fork:design first)."],
             validation: [],
             usage: { prompt_tokens: 0, completion_tokens: 0, total_tokens: 0 },
+            readFrom,
         };
     }
 
@@ -49,20 +67,21 @@ export async function runBuildGenerate(input: BuildGenerateInput): Promise<Build
     const appName = project?.name ?? "App";
     const themeStr = JSON.stringify(design.theme, null, 2);
     const navigationStr = JSON.stringify(design.navigation, null, 2);
-    const componentsStr = design.components
+    const componentsStr = (design.components ?? [])
         .map((c) => `- ${c.name}: ${c.props.join(", ")}`)
         .join("\n");
 
     const files: BuildFile[] = [];
+    const errors: string[] = [];
     const totalUsage = { prompt_tokens: 0, completion_tokens: 0, total_tokens: 0 };
 
     // Filter screens/components if specific IDs provided
     const screens = input.screenIds
-        ? design.screens.filter((s) => input.screenIds!.includes(s.id))
-        : design.screens;
+        ? (design.screens ?? []).filter((s) => input.screenIds!.includes(s.id))
+        : (design.screens ?? []);
     const components = input.componentIds
-        ? design.components.filter((c) => input.componentIds!.includes(c.id))
-        : design.components;
+        ? (design.components ?? []).filter((c) => input.componentIds!.includes(c.id))
+        : (design.components ?? []);
 
     // Generate screens
     for (const screen of screens) {
@@ -90,6 +109,11 @@ export async function runBuildGenerate(input: BuildGenerateInput): Promise<Build
         totalUsage.total_tokens += result.usage?.total_tokens ?? 0;
 
         const code = extractCode(result.text);
+        if (!code) {
+            errors.push(`Empty screen output for ${screen.name ?? screen.id}`);
+            continue;
+        }
+
         const filePath = `src/screens/${screen.name}.tsx`;
         files.push({ path: filePath, content: code });
     }
@@ -117,6 +141,11 @@ export async function runBuildGenerate(input: BuildGenerateInput): Promise<Build
         totalUsage.total_tokens += result.usage?.total_tokens ?? 0;
 
         const code = extractCode(result.text);
+        if (!code) {
+            errors.push(`Empty component output for ${component.name ?? component.id}`);
+            continue;
+        }
+
         const filePath = `src/components/${component.name}.tsx`;
         files.push({ path: filePath, content: code });
     }
@@ -128,11 +157,12 @@ export async function runBuildGenerate(input: BuildGenerateInput): Promise<Build
     const validation = validateBuildFiles(files);
 
     return {
-        success: buildResult.errors.length === 0,
+        success: buildResult.errors.length === 0 && errors.length === 0,
         files,
         written: buildResult.written,
-        errors: buildResult.errors,
+        errors: [...buildResult.errors, ...errors],
         validation,
         usage: totalUsage,
+        readFrom,
     };
 }
